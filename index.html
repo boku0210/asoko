@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="hosting-provider" content="Netlify">
+<meta name="netlify-deploy" content="https://netlify.new/?utm_campaign=ai-legible&utm_source=meta&utm_medium=referral&utm_id=3b907d85-d9f8-422d-821c-76b06ac54577">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>あそこ</title>
+<meta name="description" content="この部屋から、最短であの部屋を経由して、その部屋へ向かってください。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="あそこ">
+<meta property="og:title" content="あそこ｜WEB謎">
+<meta property="og:description" content="この部屋から、最短であの部屋を経由して、その部屋へ向かってください。">
+<meta property="og:url" content="https://example.com/asoko/">
+<meta property="og:image" content="https://example.com/asoko/ogp.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="あそこ｜WEB謎">
+<meta name="twitter:description" content="この部屋から、最短であの部屋を経由して、その部屋へ向かってください。">
+<meta name="twitter:image" content="https://example.com/asoko/ogp.png">
+<meta name="twitter:url" content="https://example.com/asoko/">
+<link rel="canonical" href="https://example.com/asoko/">
+<meta name="theme-color" content="#f6f6f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121316" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --white-base: #f9f9f8;
+  --white-light: #ffffff;
+  --gray-shadow: rgba(160, 160, 160, 0.12);
+  --gray-edge: rgba(140, 140, 140, 0.10);
+  --text-main: rgba(60, 60, 60, 0.8);
+  --text-sub: rgba(100, 100, 100, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: var(--white-base);
+  color: var(--text-main);
+  font-family: "Noto Sans JP", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.wrap {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--white-base);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.instruction {
+  position: relative;
+  z-index: 100;
+  padding: max(16px, env(safe-area-inset-top)) 20px 12px;
+  text-align: center;
+  font-size: clamp(25px, 2vw, 20px);
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  color: var(--text-sub);
+  pointer-events: none;
+  font-weight: 400;
+  flex-shrink: 0;
+  background: #ffffff;
+}
+
+h1 {
+  display: none;
+}
+
+.stage {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  overflow: hidden;
+  background: 
+    linear-gradient(180deg, 
+      #fefefe 0%,
+      #fbfbf9 25%,
+      #f8f8f6 50%,
+      #f5f5f2 75%,
+      #f0f0ed 100%
+    );
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.room {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  perspective: 1000px;
+  perspective-origin: 50% 40%;
+}
+
+.room-box {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: opacity 300ms ease-out, filter 300ms ease-out;
+}
+
+.room-box.transitioning {
+  opacity: 0.2;
+  filter: blur(3px) brightness(0.9);
+}
+
+.room-box.arriving {
+  opacity: 0;
+  filter: blur(4px) brightness(0.85);
+}
+
+.room-box.arriving.arriving-active {
+  opacity: 1;
+  filter: blur(0) brightness(1);
+  transition: opacity 150ms ease-out, filter 150ms ease-out;
+}
+
+.wall {
+  position: absolute;
+  pointer-events: none;
+}
+
+.wall-ceiling {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 30%;
+  z-index: 1;
+  background: linear-gradient(180deg, 
+    rgba(238, 238, 235, 0.6) 0%,
+    rgba(230, 230, 226, 0.75) 25%,
+    rgba(220, 220, 213, 0.88) 50%,
+    rgba(210, 210, 200, 0.95) 100%
+  );
+  box-shadow: inset 0 -50px 80px rgba(180, 180, 180, 0.06);
+  clip-path: polygon(0 0, 100% 0, 65% 100%, 35% 100%);
+}
+
+.wall-floor {
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 43%;
+  z-index: 2;
+  background: linear-gradient(180deg, 
+    rgba(238, 238, 235, 0.6) 0%,
+    rgba(230, 230, 226, 0.75) 25%,
+    rgba(220, 220, 213, 0.88) 50%,
+    rgba(210, 210, 200, 0.95) 100%
+  );
+  box-shadow: inset 0 40px 80px rgba(160, 160, 160, 0.1);
+  clip-path: polygon(50% 0, 50% 0, 100% 100%, 0 100%);
+}
+
+.wall-left {
+  display: none;
+}
+
+.wall-right {
+  display: none;
+}
+
+.wall-back {
+  left: 50%;
+  top: 50%;
+  width: 40%;
+  height: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  background: linear-gradient(180deg, 
+    #f0f0ed 0%,
+    #ebebea 50%,
+    #e5e5e1 100%
+  );
+  border: 1px solid rgba(140, 140, 140, 0.12);
+  box-shadow: 
+    inset 0 2px 4px rgba(255, 255, 255, 0.2),
+    inset 0 -2px 4px rgba(140, 140, 140, 0.08),
+    0 2px 6px rgba(120, 120, 120, 0.08);
+}
+
+.room-debug-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Shippori Mincho", serif;
+  font-size: clamp(60px, 12vw, 120px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  color: rgba(0, 0, 0, 0.3);
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+  user-select: none;
+  z-index: 12;
+}
+
+.room-debug-label[hidden] {
+  display: none !important;
+}
+
+.door {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 10;
+}
+
+.door[hidden] {
+  display: none !important;
+}
+
+.door:focus-visible {
+  outline: 1px solid rgba(100, 100, 100, 0.3);
+  outline-offset: 3px;
+}
+
+.door:hover:not(.opening) {
+  filter: brightness(0.98);
+}
+
+.door-shell {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: linear-gradient(180deg, 
+    #f5f5f3 0%,
+    #ececea 30%,
+    #e0e0db 70%,
+    #d5d5ce 100%
+  );
+  border: 1.5px solid rgba(120, 120, 120, 0.18);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -8px 12px rgba(100, 100, 100, 0.12),
+    0 4px 12px rgba(100, 100, 100, 0.1);
+  pointer-events: none;
+}
+
+.door-track {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  top: 2.5%;
+  height: 1.5px;
+  background: rgba(160, 160, 160, 0.1);
+  z-index: 1;
+}
+
+.door-gap {
+  position: absolute;
+  left: 50%;
+  top: 4%;
+  bottom: 4%;
+  width: 1px;
+  transform: translateX(-50%);
+  background: rgba(140, 140, 140, 0.15);
+  transition: opacity 360ms ease;
+  z-index: 2;
+}
+
+.door-panel {
+  position: absolute;
+  top: 2.5%;
+  bottom: 2.5%;
+  width: 49%;
+  background: linear-gradient(180deg, 
+    #fefefe 0%,
+    #fcfcfb 40%,
+    #f9f9f7 70%,
+    #f4f4f1 100%
+  );
+  transition: none;
+}
+
+.door-panel::before {
+  content: '';
+  position: absolute;
+  inset: 6%;
+  border: 1px solid rgba(140, 140, 140, 0.08);
+}
+
+.door-panel-left {
+  left: 0;
+  border-right: 1px solid rgba(150, 150, 150, 0.1);
+}
+
+.door-panel-right {
+  right: 0;
+  border-left: 1px solid rgba(150, 150, 150, 0.1);
+}
+
+.door.opening .door-gap {
+  opacity: 0.05;
+}
+
+.door.opening .door-panel-left {
+  transform: translateX(-105%);
+  transition: transform 1200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.door.opening .door-panel-right {
+  transform: translateX(105%);
+  transition: transform 1200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.door-front {
+  left: 50%;
+  top: 32%;
+  width: clamp(70px, 18vw, 180px);
+  height: clamp(140px, 28vh, 260px);
+  transform: translateX(-50%);
+  z-index: 8;
+}
+
+.door-left {
+  left: 8%;
+  top: 43%;
+  width: clamp(70px, 10vw, 160px);
+  height: clamp(130px, 30vh, 240px);
+  z-index: 6;
+}
+
+.door-right {
+  right: 8%;
+  top: 43%;
+  width: clamp(70px, 10vw, 160px);
+  height: clamp(130px, 30vh, 240px);
+  z-index: 6;
+}
+
+.door-hit-left,
+.door-hit-right {
+  position: absolute;
+  z-index: 7;
+  cursor: pointer;
+  background: transparent;
+  pointer-events: auto;
+}
+
+.door-hit-left {
+  left: 8%;
+  top: 43%;
+  width: clamp(70px, 10vw, 160px);
+  height: clamp(130px, 30vh, 240px);
+}
+
+.door-hit-right {
+  right: 8%;
+  top: 43%;
+  width: clamp(70px, 10vw, 160px);
+  height: clamp(130px, 30vh, 240px);
+}
+
+.bottom-ui {
+  position: relative;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px max(12px, env(safe-area-inset-bottom));
+  flex-shrink: 0;
+  background: #ffffff;
+}
+
+.message {
+  min-height: 16px;
+  margin: 0;
+  padding: 0 10px;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.4;
+  color: rgba(80, 80, 80, 0.6);
+  letter-spacing: 0.02em;
+  opacity: 0;
+  transition: opacity 180ms ease;
+  pointer-events: none;
+}
+
+.message.show {
+  opacity: 1;
+}
+
+.reset-btn {
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgba(80, 80, 80, 0.5);
+  font-family: "Noto Sans JP", sans-serif;
+  font-size: 30px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+  transition: color 180ms ease;
+  border-bottom: 1px solid rgba(150, 150, 150, 0.2);
+  padding: 0 8px 2px;
+}
+
+.reset-btn:hover {
+  color: rgba(60, 60, 60, 0.7);
+  border-bottom-color: rgba(120, 120, 120, 0.3);
+}
+
+.reset-btn:focus-visible {
+  outline: 1px solid rgba(100, 100, 100, 0.3);
+  outline-offset: 3px;
+}
+
+.version-badge {
+  margin: 2px 0 0;
+  padding: 0;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: rgba(130, 130, 130, 0.2);
+  pointer-events: none;
+}
+
+.clear-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(250, 250, 249, 0.88);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 280ms ease, visibility 280ms ease;
+  z-index: 200;
+  backdrop-filter: blur(2px);
+}
+
+.clear-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.clear-inner {
+  min-width: min(80vw, 300px);
+  padding: 40px 30px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(160, 160, 160, 0.15);
+  box-shadow: 
+    0 8px 32px rgba(150, 150, 150, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.clear-title {
+  margin: 0 0 16px;
+  font-family: "Shippori Mincho", serif;
+  font-size: clamp(28px, 5vw, 40px);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: rgba(60, 60, 60, 0.8);
+}
+
+.clear-text {
+  margin: 0 0 24px;
+  font-size: 13px;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+  color: rgba(80, 80, 80, 0.6);
+}
+
+.again-btn {
+  appearance: none;
+  padding: 10px 20px;
+  border: 1px solid rgba(140, 140, 140, 0.25);
+  background: rgba(255, 255, 255, 0.5);
+  color: rgba(60, 60, 60, 0.7);
+  font-family: "Noto Sans JP", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+  transition: background 180ms ease, color 180ms ease;
+}
+
+.again-btn:hover {
+  background: rgba(255, 255, 255, 0.7);
+  color: rgba(40, 40, 40, 0.8);
+}
+
+.again-btn:focus-visible {
+  outline: 1px solid rgba(100, 100, 100, 0.3);
+  outline-offset: 3px;
+}
+
+@media (max-width: 768px) {
+  .instruction {
+    font-size: 12px;
+    padding: max(14px, env(safe-area-inset-top)) 16px 10px;
+    flex-shrink: 0;
+  }
+
+  .stage {
+    border: 3px solid #000;
+    width: 100vw;
+    height: 100vw;
+    margin: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  .door-front {
+    height: clamp(140px, 28vh * 1.2, 260px);
+  }
+
+  .door-left,
+  .door-right {
+    height: clamp(130px, 30vh * 1.2, 240px);
+  }
+
+  .door-hit-left,
+  .door-hit-right {
+    height: clamp(130px, 30vh * 1.2, 240px);
+  }
+
+  .door-left {
+    left: 6%;
+  }
+
+  .door-right {
+    right: 6%;
+  }
+}
+
+@media (max-width: 480px) {
+  .instruction {
+    font-size: 11px;
+    padding: max(12px, env(safe-area-inset-top)) 14px 8px;
+  }
+
+  .wall-left {
+    clip-path: polygon(0 0, 100% 32%, 100% 56%, 0 100%);
+  }
+
+  .wall-right {
+    clip-path: polygon(0 32%, 100% 0, 100% 100%, 0 56%);
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <p class="instruction">この部屋から、最短であの部屋を経由して、その部屋へ向かってください。</p>
+  
+  <div class="stage" id="stage" aria-live="polite">
+    <div class="room" id="room">
+      <div class="room-box" id="roomBox">
+        <div class="wall wall-ceiling"></div>
+        <div class="wall wall-floor"></div>
+        <div class="wall wall-left"></div>
+        <div class="wall wall-right"></div>
+        <div class="wall wall-back"></div>
+
+        <div class="room-debug-label" id="roomDebug" hidden></div>
+
+        <button class="door door-front" id="doorFront" type="button" aria-label="正面の扉" hidden>
+          <div class="door-shell">
+            <div class="door-track"></div>
+            <div class="door-panel door-panel-left"></div>
+            <div class="door-panel door-panel-right"></div>
+            <div class="door-gap"></div>
+          </div>
+        </button>
+
+        <button class="door door-left" id="doorLeft" type="button" aria-label="左の扉" hidden>
+          <div class="door-shell">
+            <div class="door-track"></div>
+            <div class="door-panel door-panel-left"></div>
+            <div class="door-panel door-panel-right"></div>
+            <div class="door-gap"></div>
+          </div>
+        </button>
+
+        <button class="door door-right" id="doorRight" type="button" aria-label="右の扉" hidden>
+          <div class="door-shell">
+            <div class="door-track"></div>
+            <div class="door-panel door-panel-left"></div>
+            <div class="door-panel door-panel-right"></div>
+            <div class="door-gap"></div>
+          </div>
+        </button>
+
+        <div class="door-hit-left" id="doorHitLeft"></div>
+        <div class="door-hit-right" id="doorHitRight"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-ui">
+    <p class="message" id="message"></p>
+    <button class="reset-btn" id="resetBtn" type="button">この部屋に戻る</button>
+    <p class="version-badge" id="versionBadge">build v7.0</p>
+  </div>
+</div>
+
+<div class="clear-overlay" id="clearOverlay">
+  <div class="clear-inner">
+    <p class="clear-title">CLEAR</p>
+    <p class="clear-text">あなたはあそこの部屋を巡った。</p>
+    <button class="again-btn" id="againBtn" type="button">もう一度あそぶ</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var GRID = [
+    ['ん', 'わ', 'ら', 'や', 'ま', 'は', 'な', 'た', 'さ', 'か', 'あ'],
+    [null, null, 'り', null, 'み', 'ひ', 'に', 'ち', 'し', 'き', 'い'],
+    [null, null, 'る', 'ゆ', 'む', 'ふ', 'ぬ', 'つ', 'す', 'く', 'う'],
+    [null, null, 'れ', null, 'め', 'へ', 'ね', 'て', 'せ', 'け', 'え'],
+    [null, 'を', 'ろ', 'よ', 'も', 'ほ', 'の', 'と', 'そ', 'こ', 'お']
+  ];
+
+  var ROWS = GRID.length;
+  var COLS = GRID[0].length;
+  var STORAGE_KEY = 'asoko_state_v7_0';
+  var BUILD_LABEL = 'build v7.0';
+  var DEBUG_LABELS = true;
+  var OPEN_MS = 1200;
+  var MOBILE_DOOR_ANGLE = 25;
+
+  var DELTAS = [
+    { dr: -1, dc: 0 },
+    { dr: 0, dc: 1 },
+    { dr: 1, dc: 0 },
+    { dr: 0, dc: -1 }
+  ];
+
+  function findCell(letter) {
+    for (var r = 0; r < ROWS; r++) {
+      for (var c = 0; c < COLS; c++) {
+        if (GRID[r][c] === letter) return { row: r, col: c };
+      }
+    }
+    return null;
+  }
+
+  var START = findCell('こ');
+  var VIA = findCell('あ');
+  var GOAL = findCell('そ');
+  var SHORTEST = 0;
+  var state;
+  var moving = false;
+  var isMobile = window.innerWidth <= 768;
+
+  function getCell(r, c) {
+    if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return null;
+    return GRID[r][c];
+  }
+
+  function isRoom(r, c) {
+    return getCell(r, c) !== null;
+  }
+
+  function freshState() {
+    return {
+      row: START.row,
+      col: START.col,
+      facing: 0,
+      moveCount: 0,
+      visitedVia: false,
+      goalMessage: null
+    };
+  }
+
+  function normalizeState(raw) {
+    if (!raw) return freshState();
+    if (
+      typeof raw.row !== 'number' ||
+      typeof raw.col !== 'number' ||
+      typeof raw.facing !== 'number' ||
+      !isRoom(raw.row, raw.col)
+    ) return freshState();
+    return {
+      row: raw.row,
+      col: raw.col,
+      facing: ((raw.facing % 4) + 4) % 4,
+      moveCount: typeof raw.moveCount === 'number' ? raw.moveCount : 0,
+      visitedVia: !!raw.visitedVia,
+      goalMessage: null
+    };
+  }
+
+  function loadState() {
+    try {
+      return normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY)));
+    } catch (e) {
+      return freshState();
+    }
+  }
+
+  function saveState() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { }
+  }
+
+  function roomName(st) {
+    return getCell(st.row, st.col);
+  }
+
+  var EXIT_OVERRIDES = {
+    'わ': ['front'],
+    'を': [],
+    'ん': []
+  };
+
+  function canMoveTo(st, nr, nc) {
+    var dest = getCell(nr, nc);
+    if (dest === null) return false;
+    return true;
+  }
+
+  function standardMoves(st) {
+    var defs = [
+      { kind: 'front', dir: st.facing },
+      { kind: 'left', dir: (st.facing + 3) % 4 },
+      { kind: 'right', dir: (st.facing + 1) % 4 }
+    ];
+    var out = [];
+    for (var i = 0; i < defs.length; i++) {
+      var d = defs[i].dir;
+      var nr = st.row + DELTAS[d].dr;
+      var nc = st.col + DELTAS[d].dc;
+      if (canMoveTo(st, nr, nc)) {
+        out.push({ kind: defs[i].kind, dir: d, row: nr, col: nc });
+      }
+    }
+    return out;
+  }
+
+  function availableMoves(st) {
+    var name = roomName(st);
+    var override = EXIT_OVERRIDES[name];
+    if (!override) return standardMoves(st);
+
+    var defs = {
+      front: st.facing,
+      left: (st.facing + 3) % 4,
+      right: (st.facing + 1) % 4
+    };
+    var out = [];
+    for (var i = 0; i < override.length; i++) {
+      var item = override[i];
+      var kind = typeof item === 'string' ? item : item.kind;
+      var d = (item && typeof item.absDir === 'number') ? item.absDir : defs[kind];
+      var nr = st.row + DELTAS[d].dr;
+      var nc = st.col + DELTAS[d].dc;
+      if (canMoveTo(st, nr, nc)) {
+        out.push({ kind: kind, dir: d, row: nr, col: nc });
+      }
+    }
+    return out;
+  }
+
+  function moveMap(st) {
+    var m = { front: null, left: null, right: null };
+    var list = availableMoves(st);
+    for (var i = 0; i < list.length; i++) m[list[i].kind] = list[i];
+    return m;
+  }
+
+  function key(r, c, f) {
+    return ((r * COLS) + c) * 4 + f;
+  }
+
+  function bfsDist(startState) {
+    var dist = [];
+    for (var i = 0; i < ROWS * COLS * 4; i++) dist[i] = -1;
+
+    var q = [];
+    var startKey = key(startState.row, startState.col, startState.facing);
+    dist[startKey] = 0;
+    q.push(startKey);
+
+    for (var head = 0; head < q.length; head++) {
+      var cur = q[head];
+      var f = cur % 4;
+      var rc = (cur - f) / 4;
+      var c = rc % COLS;
+      var r = (rc - c) / COLS;
+      var here = { row: r, col: c, facing: f };
+      var nexts = availableMoves(here);
+      for (var j = 0; j < nexts.length; j++) {
+        var mv = nexts[j];
+        var nk = key(mv.row, mv.col, mv.dir);
+        if (dist[nk] === -1) {
+          dist[nk] = dist[cur] + 1;
+          q.push(nk);
+        }
+      }
+    }
+    return dist;
+  }
+
+  function shortestTotal() {
+    var d = bfsDist({ row: START.row, col: START.col, facing: 0 });
+    var best = Infinity;
+    for (var vf = 0; vf < 4; vf++) {
+      var toVia = d[key(VIA.row, VIA.col, vf)];
+      if (toVia === -1) continue;
+      var viaState = { row: VIA.row, col: VIA.col, facing: vf };
+      var dv = bfsDist(viaState);
+      for (var gf = 0; gf < 4; gf++) {
+        var toGoal = dv[key(GOAL.row, GOAL.col, gf)];
+        if (toGoal === -1) continue;
+        if (toVia + toGoal < best) best = toVia + toGoal;
+      }
+    }
+    return best;
+  }
+
+  var stageEl = document.getElementById('stage');
+  var roomEl = document.getElementById('room');
+  var roomBoxEl = document.getElementById('roomBox');
+  var roomDebugEl = document.getElementById('roomDebug');
+  var doorFrontEl = document.getElementById('doorFront');
+  var doorLeftEl = document.getElementById('doorLeft');
+  var doorRightEl = document.getElementById('doorRight');
+  var doorHitLeftEl = document.getElementById('doorHitLeft');
+  var doorHitRightEl = document.getElementById('doorHitRight');
+
+  var messageEl = document.getElementById('message');
+  var resetBtn = document.getElementById('resetBtn');
+  var clearOverlay = document.getElementById('clearOverlay');
+  var againBtn = document.getElementById('againBtn');
+  var versionBadgeEl = document.getElementById('versionBadge');
+  var doorEls = { front: doorFrontEl, left: doorLeftEl, right: doorRightEl };
+
+  function clearDoorAnimation() {
+    doorFrontEl.classList.remove('opening');
+    doorLeftEl.classList.remove('opening');
+    doorRightEl.classList.remove('opening');
+  }
+
+  function updateDoorAngles() {
+    if (isMobile) {
+      doorLeftEl.style.transform = 'perspective(600px) rotateY(' + MOBILE_DOOR_ANGLE + 'deg)';
+      doorRightEl.style.transform = 'perspective(600px) rotateY(-' + MOBILE_DOOR_ANGLE + 'deg)';
+    } else {
+      doorLeftEl.style.transform = 'perspective(600px) rotateY(51deg)';
+      doorRightEl.style.transform = 'perspective(600px) rotateY(-51deg)';
+    }
+  }
+
+  function render() {
+    var currentRoom = roomName(state) || '';
+    if (versionBadgeEl) versionBadgeEl.textContent = BUILD_LABEL;
+    if (roomDebugEl) {
+      roomDebugEl.textContent = DEBUG_LABELS ? currentRoom : '';
+      roomDebugEl.hidden = !DEBUG_LABELS;
+    }
+    var doors = moveMap(state);
+
+    doorFrontEl.hidden = !doors.front;
+    doorLeftEl.hidden = !doors.left;
+    doorRightEl.hidden = !doors.right;
+    
+    doorHitLeftEl.style.display = !doors.left ? 'none' : 'block';
+    doorHitRightEl.style.display = !doors.right ? 'none' : 'block';
+
+    updateDoorAngles();
+
+    if (state.goalMessage) {
+      messageEl.textContent = state.goalMessage;
+      messageEl.classList.add('show');
+    } else {
+      messageEl.textContent = '';
+      messageEl.classList.remove('show');
+    }
+  }
+
+  function showClear() {
+    clearOverlay.classList.add('show');
+  }
+
+  function hideClear() {
+    clearOverlay.classList.remove('show');
+  }
+
+  function checkGoal() {
+    state.goalMessage = null;
+    if (state.row === GOAL.row && state.col === GOAL.col) {
+      if (!state.visitedVia) {
+        state.goalMessage = 'あの部屋を経由してください';
+      } else if (state.moveCount !== SHORTEST) {
+        state.goalMessage = '最短経路ではありません';
+      } else {
+        showClear();
+      }
+    }
+  }
+
+  function applyMove(mv) {
+    state.row = mv.row;
+    state.col = mv.col;
+    state.facing = mv.dir;
+    state.moveCount += 1;
+    if (state.row === VIA.row && state.col === VIA.col) state.visitedVia = true;
+    checkGoal();
+    saveState();
+    render();
+  }
+
+  function pressDoor(kind) {
+    if (moving) return;
+    var mv = moveMap(state)[kind];
+    if (!mv) return;
+
+    moving = true;
+    state.goalMessage = null;
+    
+    clearDoorAnimation();
+    var door = doorEls[kind];
+    if (door) door.classList.add('opening');
+
+    window.setTimeout(function () {
+      roomBoxEl.style.filter = 'blur(3px) brightness(0.9)';
+      
+      window.setTimeout(function () {
+        applyMove(mv);
+        
+        window.setTimeout(function () {
+          roomBoxEl.style.filter = 'blur(0) brightness(1)';
+          clearDoorAnimation();
+          moving = false;
+        }, 300);
+      }, 50);
+    }, OPEN_MS - 100);
+  }
+
+  function resetGame() {
+    moving = false;
+    clearDoorAnimation();
+    roomBoxEl.classList.remove('transitioning');
+    roomBoxEl.classList.remove('arriving');
+    roomBoxEl.classList.remove('arriving-active');
+    roomBoxEl.style.filter = 'blur(0) brightness(1)';
+    state = freshState();
+    hideClear();
+    saveState();
+    render();
+  }
+
+  doorFrontEl.addEventListener('click', function () { pressDoor('front'); });
+  doorLeftEl.addEventListener('click', function () { pressDoor('left'); });
+  doorRightEl.addEventListener('click', function () { pressDoor('right'); });
+  doorHitLeftEl.addEventListener('click', function () { pressDoor('left'); });
+  doorHitRightEl.addEventListener('click', function () { pressDoor('right'); });
+  resetBtn.addEventListener('click', resetGame);
+  againBtn.addEventListener('click', resetGame);
+
+  window.addEventListener('resize', function() {
+    isMobile = window.innerWidth <= 768;
+  });
+
+  SHORTEST = shortestTotal();
+  state = loadState();
+  if (state.row === GOAL.row && state.col === GOAL.col && state.visitedVia && state.moveCount === SHORTEST) {
+    showClear();
+  }
+  render();
+})();
+</script>
+
+</body>
+</html>
