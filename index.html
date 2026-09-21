@@ -163,8 +163,9 @@ h1 {
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 43%;
-  z-index: 2;
+  height: 50%;
+  z-index: 5;
+  pointer-events: none;
   background: linear-gradient(180deg, 
     rgba(238, 238, 235, 0.6) 0%,
     rgba(230, 230, 226, 0.75) 25%,
@@ -172,7 +173,7 @@ h1 {
     rgba(210, 210, 200, 0.95) 100%
   );
   box-shadow: inset 0 40px 80px rgba(160, 160, 160, 0.1);
-  clip-path: polygon(50% 0, 50% 0, 100% 100%, 0 100%);
+  clip-path: polygon(35% 30%, 65% 30%, 100% 100%, 0 100%);
 }
 
 .wall-left {
@@ -189,7 +190,7 @@ h1 {
   width: 40%;
   height: 50%;
   transform: translate(-50%, -50%);
-  z-index: 5;
+  z-index: 2;
   background: linear-gradient(180deg, 
     #f0f0ed 0%,
     #ebebea 50%,
@@ -216,7 +217,7 @@ h1 {
   text-shadow: 0 2px 0 rgba(255, 255, 255, 0.5);
   pointer-events: none;
   user-select: none;
-  z-index: 12;
+  z-index: 4;
 }
 
 .room-debug-label[hidden] {
@@ -340,23 +341,23 @@ h1 {
   width: clamp(70px, 18vw, 180px);
   height: clamp(140px, 28vh, 260px);
   transform: translateX(-50%);
-  z-index: 8;
+  z-index: 3;
 }
 
 .door-left {
   left: 8%;
-  top: 43%;
+  top: 30%;
   width: clamp(70px, 10vw, 160px);
-  height: clamp(130px, 30vh, 240px);
-  z-index: 6;
+  height: clamp(160px, 50vh, 300px);
+  z-index: 0;
 }
 
 .door-right {
   right: 8%;
-  top: 43%;
+  top: 30%;
   width: clamp(70px, 10vw, 160px);
-  height: clamp(130px, 30vh, 240px);
-  z-index: 6;
+  height: clamp(160px, 50vh, 300px);
+  z-index: 0;
 }
 
 .door-hit-left,
@@ -370,16 +371,16 @@ h1 {
 
 .door-hit-left {
   left: 8%;
-  top: 43%;
+  top: 30%;
   width: clamp(70px, 10vw, 160px);
-  height: clamp(130px, 30vh, 240px);
+  height: clamp(160px, 50vh, 300px);
 }
 
 .door-hit-right {
   right: 8%;
-  top: 43%;
+  top: 30%;
   width: clamp(70px, 10vw, 160px);
-  height: clamp(130px, 30vh, 240px);
+  height: clamp(160px, 50vh, 300px);
 }
 
 .bottom-ui {
@@ -531,24 +532,34 @@ h1 {
 
   .stage {
     border: 3px solid #000;
-    width: 100vw;
-    height: 100vw;
+    width: 100%;
+    height: auto;
     margin: auto;
     aspect-ratio: 1 / 1;
   }
 
   .door-front {
     height: clamp(140px, 28vh * 1.2, 260px);
+    top: 45%;
+  }
+
+  .door-left {
+    top: 55%;
+  }
+
+  .door-right {
+    top: 55%;
   }
 
   .door-left,
   .door-right {
-    height: clamp(130px, 30vh * 1.2, 240px);
+    height: clamp(160px, 50vh * 1.2, 300px);
   }
 
   .door-hit-left,
   .door-hit-right {
-    height: clamp(130px, 30vh * 1.2, 240px);
+    height: clamp(160px, 50vh * 1.2, 300px);
+    top: 55%;
   }
 
   .door-left {
@@ -941,6 +952,12 @@ h1 {
     render();
   }
 
+  function getFloorY() {
+    var stageRect = stageEl.getBoundingClientRect();
+    var floorHeight = stageRect.height * 0.50;
+    return stageRect.bottom - floorHeight;
+  }
+
   function pressDoor(kind) {
     if (moving) return;
     var mv = moveMap(state)[kind];
@@ -968,6 +985,14 @@ h1 {
     }, OPEN_MS - 100);
   }
 
+  function pressDoorWithFloorCheck(kind, clickY) {
+    var floorY = getFloorY();
+    if (clickY >= floorY) {
+      return;
+    }
+    pressDoor(kind);
+  }
+
   function resetGame() {
     moving = false;
     clearDoorAnimation();
@@ -982,10 +1007,10 @@ h1 {
   }
 
   doorFrontEl.addEventListener('click', function () { pressDoor('front'); });
-  doorLeftEl.addEventListener('click', function () { pressDoor('left'); });
-  doorRightEl.addEventListener('click', function () { pressDoor('right'); });
-  doorHitLeftEl.addEventListener('click', function () { pressDoor('left'); });
-  doorHitRightEl.addEventListener('click', function () { pressDoor('right'); });
+  doorLeftEl.addEventListener('click', function (e) { pressDoorWithFloorCheck('left', e.clientY); });
+  doorRightEl.addEventListener('click', function (e) { pressDoorWithFloorCheck('right', e.clientY); });
+  doorHitLeftEl.addEventListener('click', function (e) { pressDoorWithFloorCheck('left', e.clientY); });
+  doorHitRightEl.addEventListener('click', function (e) { pressDoorWithFloorCheck('right', e.clientY); });
   resetBtn.addEventListener('click', resetGame);
   againBtn.addEventListener('click', resetGame);
 
