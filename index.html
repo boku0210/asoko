@@ -105,6 +105,12 @@ h1 {
   justify-content: center;
 }
 
+.stage-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 .room {
   position: absolute;
   inset: 0;
@@ -677,11 +683,17 @@ h1 {
   }
 
   .stage {
-    border: 3px solid #000;
     width: 100%;
-    height: auto;
-    margin: auto;
+    max-width: 100%;
     aspect-ratio: 1 / 1;
+    padding: 0;
+  }
+
+  .stage-container {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    height: 100%;
+    border: 3px solid #000000;
   }
 
   .door-front {
@@ -763,45 +775,47 @@ h1 {
   <p class="instruction" id="instruction">この部屋から最短でその部屋に向かってください。</p>
   
   <div class="stage" id="stage" aria-live="polite">
-    <div class="room" id="room">
-      <div class="room-box" id="roomBox">
-        <div class="wall wall-ceiling"></div>
-        <div class="wall wall-floor"></div>
-        <div class="wall wall-left"></div>
-        <div class="wall wall-right"></div>
-        <div class="wall wall-back"></div>
+    <div class="stage-container" id="stageContainer">
+      <div class="room" id="room">
+        <div class="room-box" id="roomBox">
+          <div class="wall wall-ceiling"></div>
+          <div class="wall wall-floor"></div>
+          <div class="wall wall-left"></div>
+          <div class="wall wall-right"></div>
+          <div class="wall wall-back"></div>
 
-        <div class="room-debug-label" id="roomDebug" hidden></div>
+          <div class="room-debug-label" id="roomDebug" hidden></div>
 
-        <button class="door door-front" id="doorFront" type="button" aria-label="正面の扉" hidden>
-          <div class="door-shell">
-            <div class="door-track"></div>
-            <div class="door-panel door-panel-left"></div>
-            <div class="door-panel door-panel-right"></div>
-            <div class="door-gap"></div>
-          </div>
-        </button>
+          <button class="door door-front" id="doorFront" type="button" aria-label="正面の扉" hidden>
+            <div class="door-shell">
+              <div class="door-track"></div>
+              <div class="door-panel door-panel-left"></div>
+              <div class="door-panel door-panel-right"></div>
+              <div class="door-gap"></div>
+            </div>
+          </button>
 
-        <button class="door door-left" id="doorLeft" type="button" aria-label="左の扉" hidden>
-          <div class="door-shell">
-            <div class="door-track"></div>
-            <div class="door-panel door-panel-left"></div>
-            <div class="door-panel door-panel-right"></div>
-            <div class="door-gap"></div>
-          </div>
-        </button>
+          <button class="door door-left" id="doorLeft" type="button" aria-label="左の扉" hidden>
+            <div class="door-shell">
+              <div class="door-track"></div>
+              <div class="door-panel door-panel-left"></div>
+              <div class="door-panel door-panel-right"></div>
+              <div class="door-gap"></div>
+            </div>
+          </button>
 
-        <button class="door door-right" id="doorRight" type="button" aria-label="右の扉" hidden>
-          <div class="door-shell">
-            <div class="door-track"></div>
-            <div class="door-panel door-panel-left"></div>
-            <div class="door-panel door-panel-right"></div>
-            <div class="door-gap"></div>
-          </div>
-        </button>
+          <button class="door door-right" id="doorRight" type="button" aria-label="右の扉" hidden>
+            <div class="door-shell">
+              <div class="door-track"></div>
+              <div class="door-panel door-panel-left"></div>
+              <div class="door-panel door-panel-right"></div>
+              <div class="door-gap"></div>
+            </div>
+          </button>
 
-        <div class="door-hit-left" id="doorHitLeft"></div>
-        <div class="door-hit-right" id="doorHitRight"></div>
+          <div class="door-hit-left" id="doorHitLeft"></div>
+          <div class="door-hit-right" id="doorHitRight"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1047,6 +1061,7 @@ h1 {
 
   var instructionEl = document.getElementById('instruction');
   var stageEl = document.getElementById('stage');
+  var stageContainerEl = document.getElementById('stageContainer');
   var roomEl = document.getElementById('room');
   var roomBoxEl = document.getElementById('roomBox');
   var roomDebugEl = document.getElementById('roomDebug');
@@ -1163,8 +1178,8 @@ h1 {
   }
 
   function getFloorY() {
-    var stageRect = stageEl.getBoundingClientRect();
-    return stageRect.top + stageRect.height * 0.70;
+    var containerRect = stageContainerEl.getBoundingClientRect();
+    return containerRect.top + containerRect.height * 0.70;
   }
 
   function pressDoor(kind) {
