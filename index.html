@@ -545,12 +545,7 @@ h1 {
 }
 
 .version-badge {
-  margin: 2px 0 0;
-  padding: 0;
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  color: rgba(130, 130, 130, 0.2);
-  pointer-events: none;
+  display: none;
 }
 
 .clear-overlay {
@@ -876,7 +871,6 @@ h1 {
       <button class="reset-btn" id="resetBtn" type="button">この部屋に戻る</button>
       <button class="reset-from-stage2-btn" id="resetFromStage2Btn" type="button">はじめから遊ぶ</button>
     </div>
-    <p class="version-badge" id="versionBadge">build v7.0</p>
   </div>
 </div>
 
@@ -1129,7 +1123,6 @@ h1 {
   var clearStepEl = document.getElementById('clearStep');
   var clearTextEl = document.getElementById('clearText');
   var againBtn = document.getElementById('againBtn');
-  var versionBadgeEl = document.getElementById('versionBadge');
   var goalMessageEl = document.getElementById('goalMessage');
   var goalMessageTextEl = document.getElementById('goalMessageText');
   var resetFromStage2Btn = document.getElementById('resetFromStage2Btn');
@@ -1151,7 +1144,6 @@ h1 {
 
   function render() {
     var currentRoom = roomName(state) || '';
-    if (versionBadgeEl) versionBadgeEl.textContent = BUILD_LABEL;
     if (roomDebugEl) {
       roomDebugEl.textContent = DEBUG_LABELS ? currentRoom : '';
       roomDebugEl.hidden = !DEBUG_LABELS;
@@ -1218,7 +1210,7 @@ h1 {
           showGoalMessage('最短経路ではありません');
         } else {
           clearStepEl.textContent = 'STEP 1 CLEAR';
-          clearTextEl.textContent = 'あなたはそこの部屋を巡った。';
+          clearTextEl.textContent = 'あなたは「そこの部屋」を巡った。';
           againBtn.textContent = '次へ';
           showClear();
           updateUIForMode();
@@ -1230,7 +1222,7 @@ h1 {
           showGoalMessage('最短経路ではありません');
         } else {
           clearStepEl.textContent = 'ALL CLEAR';
-          clearTextEl.textContent = 'あなたはあそこの部屋を巡った。';
+          clearTextEl.textContent = 'あなたは「あそこの部屋」を巡った。';
           againBtn.textContent = 'もう一度あそぶ';
           showClear();
           updateUIForMode();
