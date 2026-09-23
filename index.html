@@ -584,18 +584,22 @@ h1 {
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-.clear-title {
-  margin: 0 0 16px;
+.clear-step {
+  margin: 0 0 24px;
   font-family: "Shippori Mincho", serif;
-  font-size: clamp(28px, 5vw, 40px);
+  font-size: clamp(32px, 8vw, 56px);
   font-weight: 700;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.08em;
   color: rgba(60, 60, 60, 0.8);
+}
+
+.clear-title {
+  display: none;
 }
 
 .clear-text {
   margin: 0 0 24px;
-  font-size: 13px;
+  font-size: clamp(16px, 4vw, 24px);
   line-height: 1.8;
   letter-spacing: 0.02em;
   color: rgba(80, 80, 80, 0.6);
@@ -878,7 +882,7 @@ h1 {
 
 <div class="clear-overlay" id="clearOverlay">
   <div class="clear-inner">
-    <p class="clear-title">CLEAR</p>
+    <p class="clear-step" id="clearStep"></p>
     <p class="clear-text" id="clearText">あなたはそこの部屋を巡った。</p>
     <button class="again-btn" id="againBtn" type="button">次へ</button>
   </div>
@@ -1122,6 +1126,7 @@ h1 {
 
   var resetBtn = document.getElementById('resetBtn');
   var clearOverlay = document.getElementById('clearOverlay');
+  var clearStepEl = document.getElementById('clearStep');
   var clearTextEl = document.getElementById('clearText');
   var againBtn = document.getElementById('againBtn');
   var versionBadgeEl = document.getElementById('versionBadge');
@@ -1212,6 +1217,7 @@ h1 {
         if (state.moveCount !== 1) {
           showGoalMessage('最短経路ではありません');
         } else {
+          clearStepEl.textContent = 'STEP 1 CLEAR';
           clearTextEl.textContent = 'あなたはそこの部屋を巡った。';
           againBtn.textContent = '次へ';
           showClear();
@@ -1223,6 +1229,7 @@ h1 {
         } else if (state.moveCount !== SHORTEST) {
           showGoalMessage('最短経路ではありません');
         } else {
+          clearStepEl.textContent = 'ALL CLEAR';
           clearTextEl.textContent = 'あなたはあそこの部屋を巡った。';
           againBtn.textContent = 'もう一度あそぶ';
           showClear();
@@ -1278,37 +1285,48 @@ h1 {
     pressDoor(kind);
   }
 
-  function resetGame() {
-    moving = false;
-    clearDoorAnimation();
+  function performResetAnimation() {
+    if (moving) return;
+
+    moving = true;
     hideGoalMessage();
-    roomBoxEl.classList.remove('transitioning');
-    roomBoxEl.classList.remove('arriving');
-    roomBoxEl.classList.remove('arriving-active');
-    roomBoxEl.style.filter = 'blur(0) brightness(1)';
-    state = freshState();
-    hideClear();
-    updateUIForMode();
-    saveState();
-    render();
+
+    roomBoxEl.style.filter = 'blur(3px) brightness(0.9)';
+    
+    window.setTimeout(function () {
+      state = freshState();
+      hideClear();
+      updateUIForMode();
+      saveState();
+      render();
+      
+      window.setTimeout(function () {
+        roomBoxEl.style.filter = 'blur(0) brightness(1)';
+        moving = false;
+      }, 300);
+    }, 50);
+  }
+
+  function resetGame() {
+    performResetAnimation();
   }
 
   function nextMode() {
     if (currentMode === 1) {
       currentMode = 2;
       instructionEl.innerHTML = 'この部屋から最短であの部屋を経由して<br>その部屋へ向かってください。';
-      resetGame();
+      performResetAnimation();
     } else {
       currentMode = 1;
       instructionEl.innerHTML = 'この部屋から最短で<br>その部屋へ向かってください。';
-      resetGame();
+      performResetAnimation();
     }
   }
 
   function resetToStage1() {
     currentMode = 1;
     instructionEl.innerHTML = 'この部屋から最短で<br>その部屋へ向かってください。';
-    resetGame();
+    performResetAnimation();
   }
 
   function toggleHiraganaVisibility() {
