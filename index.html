@@ -172,10 +172,10 @@ h1 {
   height: 32%;
   z-index: 6;
   background: linear-gradient(180deg, 
-    rgba(238, 238, 235, 0.6) 0%,
-    rgba(230, 230, 226, 0.75) 25%,
-    rgba(220, 220, 213, 0.88) 50%,
-    rgba(210, 210, 200, 0.95) 100%
+    rgba(220, 220, 213, 1) 0%,
+    rgba(210, 210, 200, 1) 25%,
+    rgba(200, 200, 190, 1) 50%,
+    rgba(190, 190, 180, 1) 100%
   );
   box-shadow: inset 0 -50px 80px rgba(180, 180, 180, 0.06);
   clip-path: polygon(
@@ -191,7 +191,7 @@ h1 {
   top: 70%;
   width: 100%;
   height: 30%;
-  z-index: 6;
+  z-index: 12;
   position: relative;
   background: linear-gradient(180deg, 
     rgba(220, 220, 213, 1) 0%,
@@ -370,29 +370,29 @@ h1 {
 
 .door-front {
   left: 50%;
-  top: 42%;
-  width: clamp(50px, 12vw, 130px);
-  height: clamp(120px, 45vh, 440px);
+  top: 0;
+  width: clamp(40px, 10vw, 100px);
+  height: clamp(200px, 100vh, 800px);
   transform: translateX(-50%);
-  z-index: 3;
+  z-index: 11;
 }
 
 .door-left {
-  left: 8%;
-  top: 40%;
-  width: clamp(50px, 7vw, 120px);
-  height: clamp(140px, 60vh, 480px);
-  z-index: 1;
+  left: 13.5%;
+  top: 0;
+  width: clamp(50px, 7vw, 100px);
+  height: clamp(200px, 100vh, 800px);
+  z-index: 8;
   transform: scaleY(0.95);
   opacity: 0.95;
 }
 
 .door-right {
-  right: 8%;
-  top: 40%;
-  width: clamp(50px, 7vw, 120px);
-  height: clamp(140px, 60vh, 480px);
-  z-index: 1;
+  right: 13.5%;
+  top: 0;
+  width: clamp(50px, 7vw, 100px);
+  height: clamp(200px, 100vh, 800px);
+  z-index: 8;
   transform: scaleY(0.95);
   opacity: 0.95;
 }
@@ -407,17 +407,39 @@ h1 {
 }
 
 .door-hit-left {
-  left: 8%;
-  top: 40%;
-  width: clamp(50px, 7vw, 120px);
-  height: clamp(140px, 60vh, 480px);
+  left: 13.5%;
+  top: 0;
+  width: clamp(50px, 7vw, 100px);
+  height: clamp(200px, 100vh, 800px);
 }
 
 .door-hit-right {
-  right: 8%;
-  top: 40%;
-  width: clamp(50px, 7vw, 120px);
-  height: clamp(140px, 60vh, 480px);
+  right: 13.5%;
+  top: 0;
+  width: clamp(50px, 7vw, 100px);
+  height: clamp(200px, 100vh, 800px);
+}
+
+.ceiling-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 32%;
+  z-index: 5;
+  pointer-events: none;
+  background: linear-gradient(180deg, 
+    rgba(220, 220, 213, 1) 0%,
+    rgba(210, 210, 200, 1) 25%,
+    rgba(200, 200, 190, 1) 50%,
+    rgba(190, 190, 180, 1) 100%
+  );
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    calc(50% + var(--wall-back-width) / 2) 100%,
+    calc(50% - var(--wall-back-width) / 2) 100%
+  );
 }
 
 .bottom-ui {
@@ -711,37 +733,23 @@ h1 {
   }
 
   .door-front {
-    height: clamp(120px, 45vh * 1.2, 440px);
-    top: 42%;
+    top: 0;
   }
 
   .door-left {
-    top: 40%;
-    left: 6%;
+    top: 0;
   }
 
   .door-right {
-    top: 40%;
-    right: 6%;
-  }
-
-  .door-left,
-  .door-right {
-    height: clamp(140px, 60vh * 1.2, 480px);
-  }
-
-  .door-hit-left,
-  .door-hit-right {
-    height: clamp(140px, 60vh * 1.2, 480px);
-    top: 40%;
+    top: 0;
   }
 
   .door-hit-left {
-    left: 6%;
+    top: 0;
   }
 
   .door-hit-right {
-    right: 6%;
+    top: 0;
   }
 
   .reset-btn {
@@ -832,6 +840,7 @@ h1 {
           <div class="door-hit-left" id="doorHitLeft"></div>
           <div class="door-hit-right" id="doorHitRight"></div>
         </div>
+        <div class="ceiling-overlay"></div>
       </div>
       <div class="stage-frame" id="stageFrame"></div>
     </div>
@@ -840,7 +849,7 @@ h1 {
   <div class="bottom-ui">
     <div class="bottom-buttons">
       <button class="reset-btn" id="resetBtn" type="button">この部屋に戻る</button>
-      <button class="reset-from-stage2-btn" id="resetFromStage2Btn" type="button">初めから遊ぶ</button>
+      <button class="reset-from-stage2-btn" id="resetFromStage2Btn" type="button">はじめから遊ぶ</button>
     </div>
     <p class="version-badge" id="versionBadge">build v7.0</p>
   </div>
@@ -860,7 +869,7 @@ h1 {
 
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-inner">
-    <p class="confirm-text">本当に始めから遊びますか？</p>
+    <p class="confirm-text">本当にはじめから遊びますか？</p>
     <div class="confirm-buttons">
       <button class="confirm-btn confirm-btn-yes" id="confirmYesBtn" type="button">はい</button>
       <button class="confirm-btn" id="confirmNoBtn" type="button">いいえ</button>
@@ -1207,11 +1216,6 @@ h1 {
     render();
   }
 
-  function getFloorY() {
-    var containerRect = stageContainerEl.getBoundingClientRect();
-    return containerRect.top + containerRect.height * 0.70;
-  }
-
   function pressDoor(kind) {
     if (moving) return;
     var mv = moveMap(state)[kind];
@@ -1239,11 +1243,7 @@ h1 {
     }, OPEN_MS - 100);
   }
 
-  function pressDoorWithFloorCheck(kind, clickY) {
-    var floorY = getFloorY();
-    if (clickY >= floorY) {
-      return;
-    }
+  function pressDoorWithoutFloorCheck(kind) {
     pressDoor(kind);
   }
 
@@ -1281,10 +1281,10 @@ h1 {
   }
 
   doorFrontEl.addEventListener('click', function () { pressDoor('front'); });
-  doorLeftEl.addEventListener('click', function (e) { pressDoorWithFloorCheck('left', e.clientY); });
-  doorRightEl.addEventListener('click', function (e) { pressDoorWithFloorCheck('right', e.clientY); });
-  doorHitLeftEl.addEventListener('click', function (e) { pressDoorWithFloorCheck('left', e.clientY); });
-  doorHitRightEl.addEventListener('click', function (e) { pressDoorWithFloorCheck('right', e.clientY); });
+  doorLeftEl.addEventListener('click', function () { pressDoorWithoutFloorCheck('left'); });
+  doorRightEl.addEventListener('click', function () { pressDoorWithoutFloorCheck('right'); });
+  doorHitLeftEl.addEventListener('click', function () { pressDoorWithoutFloorCheck('left'); });
+  doorHitRightEl.addEventListener('click', function () { pressDoorWithoutFloorCheck('right'); });
   resetBtn.addEventListener('click', resetGame);
   againBtn.addEventListener('click', nextMode);
   resetFromStage2Btn.addEventListener('click', showConfirm);
