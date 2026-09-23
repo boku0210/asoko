@@ -72,7 +72,7 @@ html, body {
   z-index: 100;
   padding: max(16px, env(safe-area-inset-top)) 20px 12px;
   text-align: center;
-  font-size: clamp(14px, 2vw, 18px);
+  font-size: clamp(15px, 2.2vw, 20px);
   line-height: 1.8;
   letter-spacing: 0.02em;
   color: #000000;
@@ -692,7 +692,7 @@ h1 {
 
 @media (max-width: 768px) {
   .instruction {
-    font-size: 15px;
+    font-size: 16px;
     padding: max(14px, env(safe-area-inset-top)) 16px 10px;
     flex-shrink: 0;
     min-height: 100px;
@@ -757,7 +757,7 @@ h1 {
 
 @media (max-width: 480px) {
   .instruction {
-    font-size: 13px;
+    font-size: 14px;
     padding: max(12px, env(safe-area-inset-top)) 14px 8px;
   }
 
@@ -1157,6 +1157,15 @@ h1 {
     confirmOverlay.classList.remove('show');
   }
 
+  function checkDeadEnd() {
+    var currentRoom = roomName(state);
+    if (currentRoom === 'を' || currentRoom === 'ん') {
+      showGoalMessage('ここから先に部屋はありません');
+      return true;
+    }
+    return false;
+  }
+
   function checkGoal() {
     if (state.row === GOAL.row && state.col === GOAL.col) {
       if (currentMode === 1) {
@@ -1189,7 +1198,11 @@ h1 {
     state.facing = mv.dir;
     state.moveCount += 1;
     if (state.row === VIA.row && state.col === VIA.col) state.visitedVia = true;
-    checkGoal();
+    
+    if (!checkDeadEnd()) {
+      checkGoal();
+    }
+    
     saveState();
     render();
   }
