@@ -697,9 +697,6 @@ h1 {
     flex-shrink: 0;
     min-height: 100px;
     line-height: 1.8;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .stage {
@@ -762,9 +759,6 @@ h1 {
   .instruction {
     font-size: 13px;
     padding: max(12px, env(safe-area-inset-top)) 14px 8px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .wall-left {
@@ -794,7 +788,7 @@ h1 {
 <body>
 
 <div class="wrap">
-  <p class="instruction" id="instruction">この部屋から最短でその部屋に向かってください。</p>
+  <p class="instruction" id="instruction">この部屋から最短で<br>その部屋へ向かってください。</p>
   
   <div class="stage" id="stage" aria-live="polite">
     <div class="stage-container" id="stageContainer">
@@ -1262,14 +1256,14 @@ h1 {
       resetGame();
     } else {
       currentMode = 1;
-      instructionEl.textContent = 'この部屋から最短でその部屋に向かってください。';
+      instructionEl.innerHTML = 'この部屋から最短で<br>その部屋へ向かってください。';
       resetGame();
     }
   }
 
   function resetToStage1() {
     currentMode = 1;
-    instructionEl.textContent = 'この部屋から最短でその部屋に向かってください。';
+    instructionEl.innerHTML = 'この部屋から最短で<br>その部屋へ向かってください。';
     resetGame();
   }
 
