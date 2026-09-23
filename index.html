@@ -371,7 +371,7 @@ h1 {
 .door-front {
   left: 50%;
   top: 0;
-  width: clamp(40px, 10vw, 100px);
+  width: clamp(80px, 16vw, 160px);
   height: clamp(200px, 100vh, 800px);
   transform: translateX(-50%);
   z-index: 11;
@@ -440,6 +440,24 @@ h1 {
     calc(50% + var(--wall-back-width) / 2) 100%,
     calc(50% - var(--wall-back-width) / 2) 100%
   );
+}
+
+.room-hiragana-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Shippori Mincho", serif;
+  font-size: clamp(60px, 12vw, 120px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  color: rgba(0, 0, 0, 0.3);
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.5);
+  user-select: none;
 }
 
 .bottom-ui {
@@ -839,6 +857,8 @@ h1 {
 
           <div class="door-hit-left" id="doorHitLeft"></div>
           <div class="door-hit-right" id="doorHitRight"></div>
+
+          <div class="room-hiragana-layer" id="hiraganaLayer"></div>
         </div>
         <div class="ceiling-overlay"></div>
       </div>
@@ -1091,6 +1111,7 @@ h1 {
   var roomEl = document.getElementById('room');
   var roomBoxEl = document.getElementById('roomBox');
   var roomDebugEl = document.getElementById('roomDebug');
+  var hiraganaLayerEl = document.getElementById('hiraganaLayer');
   var doorFrontEl = document.getElementById('doorFront');
   var doorLeftEl = document.getElementById('doorLeft');
   var doorRightEl = document.getElementById('doorRight');
@@ -1122,6 +1143,9 @@ h1 {
     if (roomDebugEl) {
       roomDebugEl.textContent = DEBUG_LABELS ? currentRoom : '';
       roomDebugEl.hidden = !DEBUG_LABELS;
+    }
+    if (hiraganaLayerEl) {
+      hiraganaLayerEl.textContent = currentRoom;
     }
     var doors = moveMap(state);
 
