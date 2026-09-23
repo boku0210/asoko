@@ -1251,7 +1251,7 @@ h1 {
   function nextMode() {
     if (currentMode === 1) {
       currentMode = 2;
-      instructionEl.textContent = 'この部屋から、最短であの部屋を経由して、その部屋へ向かってください。';
+      instructionEl.innerHTML = 'この部屋から最短であの部屋を経由して<br>その部屋へ向かってください。';
       resetGame();
     } else {
       currentMode = 1;
