@@ -36,6 +36,7 @@
   --text-main: rgba(60, 60, 60, 0.8);
   --text-sub: rgba(100, 100, 100, 0.5);
   --wall-back-width: 40%;
+  --hiragana-visibility: transparent;
 }
 
 * {
@@ -455,9 +456,9 @@ h1 {
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0.06em;
-  color: rgba(0, 0, 0, 0.3);
-  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.5);
+  color: var(--hiragana-visibility);
   user-select: none;
+  transition: color 200ms ease;
 }
 
 .bottom-ui {
@@ -913,7 +914,8 @@ h1 {
   var COLS = GRID[0].length;
   var STORAGE_KEY = 'asoko_state_v7_0';
   var BUILD_LABEL = 'build v7.0';
-  var DEBUG_LABELS = true;
+  var DEBUG_LABELS = false;
+  var HIRAGANA_VISIBLE = false;
   var OPEN_MS = 1200;
 
   var DELTAS = [
@@ -1137,6 +1139,11 @@ h1 {
     doorRightEl.classList.remove('opening');
   }
 
+  function updateHiraganaVisibility() {
+    var color = HIRAGANA_VISIBLE ? 'rgba(0, 0, 0, 0.3)' : 'transparent';
+    document.documentElement.style.setProperty('--hiragana-visibility', color);
+  }
+
   function render() {
     var currentRoom = roomName(state) || '';
     if (versionBadgeEl) versionBadgeEl.textContent = BUILD_LABEL;
@@ -1304,6 +1311,14 @@ h1 {
     resetGame();
   }
 
+  function toggleHiraganaVisibility() {
+    HIRAGANA_VISIBLE = !HIRAGANA_VISIBLE;
+    updateHiraganaVisibility();
+    console.log('ひらがな表示: ' + (HIRAGANA_VISIBLE ? 'ON' : 'OFF'));
+  }
+
+  window.toggleHiraganaVisibility = toggleHiraganaVisibility;
+
   doorFrontEl.addEventListener('click', function () { pressDoor('front'); });
   doorLeftEl.addEventListener('click', function () { pressDoorWithoutFloorCheck('left'); });
   doorRightEl.addEventListener('click', function () { pressDoorWithoutFloorCheck('right'); });
@@ -1320,6 +1335,7 @@ h1 {
 
   SHORTEST = shortestTotal();
   state = freshState();
+  updateHiraganaVisibility();
   render();
 })();
 </script>
