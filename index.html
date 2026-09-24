@@ -512,6 +512,10 @@ h1 {
   outline-offset: 3px;
 }
 
+.reset-btn.hidden {
+  display: none;
+}
+
 .reset-from-stage2-btn {
   appearance: none;
   margin: 0;
@@ -1142,6 +1146,14 @@ h1 {
     document.documentElement.style.setProperty('--hiragana-visibility', color);
   }
 
+  function updateButtonVisibility() {
+    if (state.row === START.row && state.col === START.col) {
+      resetBtn.classList.add('hidden');
+    } else {
+      resetBtn.classList.remove('hidden');
+    }
+  }
+
   function render() {
     var currentRoom = roomName(state) || '';
     if (roomDebugEl) {
@@ -1159,6 +1171,8 @@ h1 {
     
     doorHitLeftEl.style.display = !doors.left ? 'none' : 'block';
     doorHitRightEl.style.display = !doors.right ? 'none' : 'block';
+
+    updateButtonVisibility();
   }
 
   function showClear() {
