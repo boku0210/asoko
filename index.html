@@ -604,6 +604,13 @@ h1 {
   color: rgba(80, 80, 80, 0.6);
 }
 
+.clear-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 .again-btn {
   appearance: none;
   padding: 10px 20px;
@@ -617,6 +624,7 @@ h1 {
   pointer-events: auto;
   touch-action: manipulation;
   transition: background 180ms ease, color 180ms ease;
+  border-radius: 4px;
 }
 
 .again-btn:hover {
@@ -626,6 +634,32 @@ h1 {
 
 .again-btn:focus-visible {
   outline: 1px solid rgba(100, 100, 100, 0.3);
+  outline-offset: 3px;
+}
+
+.share-btn {
+  appearance: none;
+  padding: 10px 20px;
+  border: 1px solid rgba(29, 155, 240, 0.5);
+  background: rgba(29, 155, 240, 0.1);
+  color: rgba(29, 155, 240, 0.9);
+  font-family: "Noto Sans JP", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+  transition: background 180ms ease, color 180ms ease;
+  border-radius: 4px;
+}
+
+.share-btn:hover {
+  background: rgba(29, 155, 240, 0.2);
+  color: rgba(29, 155, 240, 1);
+}
+
+.share-btn:focus-visible {
+  outline: 1px solid rgba(29, 155, 240, 0.5);
   outline-offset: 3px;
 }
 
@@ -882,7 +916,10 @@ h1 {
   <div class="clear-inner">
     <p class="clear-step" id="clearStep"></p>
     <p class="clear-text" id="clearText">あなたはそこの部屋を巡った。</p>
-    <button class="again-btn" id="againBtn" type="button">次へ</button>
+    <div class="clear-buttons">
+      <button class="again-btn" id="againBtn" type="button">次へ</button>
+      <button class="share-btn" id="shareBtn" type="button">シェアする</button>
+    </div>
   </div>
 </div>
 
@@ -1127,6 +1164,7 @@ h1 {
   var clearStepEl = document.getElementById('clearStep');
   var clearTextEl = document.getElementById('clearText');
   var againBtn = document.getElementById('againBtn');
+  var shareBtn = document.getElementById('shareBtn');
   var goalMessageEl = document.getElementById('goalMessage');
   var goalMessageTextEl = document.getElementById('goalMessageText');
   var resetFromStage2Btn = document.getElementById('resetFromStage2Btn');
@@ -1189,6 +1227,21 @@ h1 {
     } else {
       resetFromStage2Btn.classList.remove('show');
     }
+  }
+
+  function getShareText() {
+    if (currentMode === 1) {
+      return 'STEP 1 CLEARしました！😊 あなたは「そこの部屋」を巡った。 #あそこ';
+    } else {
+      return 'ALL CLEARしました！🎉 あなたは「あそこの部屋」を巡った。 #あそこ';
+    }
+  }
+
+  function share() {
+    var text = getShareText();
+    var url = 'https://example.com/asoko/';
+    var twitterUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url);
+    window.open(twitterUrl, '_blank', 'width=550,height=420');
   }
 
   function showGoalMessage(text) {
@@ -1350,6 +1403,7 @@ h1 {
   doorHitRightEl.addEventListener('click', function () { pressDoorWithoutFloorCheck('right'); });
   resetBtn.addEventListener('click', resetGame);
   againBtn.addEventListener('click', nextMode);
+  shareBtn.addEventListener('click', share);
   resetFromStage2Btn.addEventListener('click', showConfirm);
   confirmYesBtn.addEventListener('click', function() {
     hideConfirm();
