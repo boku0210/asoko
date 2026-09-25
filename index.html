@@ -1122,6 +1122,7 @@ h1 {
   var STORAGE_KEY = 'asoko_mode_v1';
   var SUPABASE_URL = 'https://pxliunzyzeoozwlwjsxp.supabase.co';
   var SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_SaPVGogcN8YDfXn8qj1fuQ_5svwlNiq';
+  var ORIGINAL_POST_URL = 'https://x.com/00nazotoki/status/2103394089018490917';
   var BUILD_LABEL = 'build v7.0';
   var DEBUG_LABELS = false;
   var HIRAGANA_VISIBLE = false;
@@ -1501,18 +1502,24 @@ h1 {
 
   function getShareText() {
     if (currentMode === 1) {
-      return 'Web謎「そこ」を解いた\n私は「そこの部屋」を巡った\nhttps://boku0210.github.io/asoko/\n#あそこ謎';
+      return 'Web謎「そこ」を解いた\n'
+        + '私は「そこの部屋」を巡った\n'
+        + 'https://boku0210.github.io/asoko/\n'
+        + '#あそこ謎\n'
+        + ORIGINAL_POST_URL;
     } else {
-      return 'Web謎「あそこ」を解いた\n私は「あそこの部屋」を巡った\nhttps://boku0210.github.io/asoko/\n#あそこ謎';
+      return 'Web謎「あそこ」を解いた\n'
+        + '私は「あそこの部屋」を巡った\n'
+        + 'https://boku0210.github.io/asoko/\n'
+        + '#あそこ謎\n'
+        + ORIGINAL_POST_URL;
     }
   }
 
   function share() {
     var text = getShareText();
-    var url = 'https://boku0210.github.io/asoko/';
     var twitterUrl = 'https://twitter.com/intent/tweet?text='
-      + encodeURIComponent(text)
-      + '&url=' + encodeURIComponent(url);
+      + encodeURIComponent(text);
     window.open(twitterUrl, '_blank', 'width=550,height=420');
   }
 
