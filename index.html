@@ -1501,17 +1501,22 @@ h1 {
   }
 
   function getShareText() {
+    var hashtags =
+      '#僕謎\n'
+      + '#あそこ謎\n'
+      + '#FSCの謎解き部\n';
+
     if (currentMode === 1) {
       return 'Web謎「そこ」を解いた\n'
         + '私は「そこの部屋」を巡った\n'
         + 'https://boku0210.github.io/asoko/\n'
-        + '#あそこ謎\n'
+        + hashtags
         + ORIGINAL_POST_URL;
     } else {
       return 'Web謎「あそこ」を解いた\n'
         + '私は「あそこの部屋」を巡った\n'
         + 'https://boku0210.github.io/asoko/\n'
-        + '#あそこ謎\n'
+        + hashtags
         + ORIGINAL_POST_URL;
     }
   }
