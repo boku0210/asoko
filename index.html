@@ -129,9 +129,14 @@ h1 {
 
 .step-indicator {
   position: absolute;
-  top: 18px;
-  right: 20px;
+  top: 10px;
+  right: 12px;
   z-index: 110;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  min-height: 44px;
   appearance: none;
   margin: 0;
   padding: 5px 10px;
@@ -143,8 +148,15 @@ h1 {
   font-weight: 500;
   line-height: 1.4;
   letter-spacing: 0.04em;
-  cursor: default;
+  cursor: pointer;
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 150ms ease, background 150ms ease;
+}
+
+.step-indicator.tapped {
+  background: rgba(255, 255, 255, 0.9);
+  color: rgba(0, 0, 0, 0.75);
 }
 
 .step-indicator:focus-visible {
@@ -183,7 +195,7 @@ h1 {
 .room-box.arriving.arriving-active {
   opacity: 1;
   filter: blur(0) brightness(1);
-  transition: opacity 150ms ease-out, filter 150ms ease-out;
+  transition: opacity 150ms ease, background 150ms ease;
 }
 
 .wall {
@@ -408,8 +420,8 @@ h1 {
   top: 0;
   width: clamp(50px, 7vw, 100px);
   height: clamp(200px, 100vh, 800px);
-  z-index: 8;
   transform: scaleY(0.95);
+  z-index: 8;
   opacity: 0.95;
 }
 
@@ -418,8 +430,8 @@ h1 {
   top: 0;
   width: clamp(50px, 7vw, 100px);
   height: clamp(200px, 100vh, 800px);
-  z-index: 8;
   transform: scaleY(0.95);
+  z-index: 8;
   opacity: 0.95;
 }
 
@@ -740,6 +752,85 @@ h1 {
   text-align: center;
   background: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(160, 160, 160, 0.15);
+  box-shadow:
+    0 8px 32px rgba(150, 150, 150, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.confirm-text {
+  margin: 0 0 24px;
+  font-size: 16px;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+  color: rgba(80, 80, 80, 0.8);
+}
+
+.confirm-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.confirm-btn {
+  appearance: none;
+  padding: 10px 24px;
+  border: 1px solid rgba(140, 140, 140, 0.25);
+  background: rgba(255, 255, 255, 0.5);
+  color: rgba(60, 60, 60, 0.7);
+  font-family: "Noto Sans JP", sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+  transition: background 180ms ease, color 180ms ease;
+  border-radius: 4px;
+}
+
+.confirm-btn:hover {
+  background: rgba(255, 255, 255, 0.7);
+  color: rgba(40, 40, 40, 0.8);
+}
+
+.confirm-btn:focus-visible {
+  outline: 1px solid rgba(100, 100, 100, 0.3);
+  outline-offset: 3px;
+}
+
+.confirm-btn-yes {
+  background: rgba(100, 150, 200, 0.2);
+  border-color: rgba(100, 150, 200, 0.4);
+}
+
+.confirm-btn-yes:hover {
+  background: rgba(100, 150, 200, 0.3);
+}
+
+.stats-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(250, 250, 249, 0.88);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 280ms ease, visibility 280ms ease;
+  z-index: 210;
+  backdrop-filter: blur(2px);
+}
+
+.stats-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.stats-inner {
+  width: min(90vw, 380px);
+  padding: 32px 26px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(160, 160, 160, 0.2);
   box-shadow: 0 8px 32px rgba(150, 150, 150, 0.08);
 }
 
@@ -825,8 +916,8 @@ h1 {
   }
 
   .step-indicator {
-    top: 14px;
-    right: 14px;
+    top: 6px;
+    right: 6px;
     font-size: 13px;
   }
 
@@ -1065,7 +1156,7 @@ h1 {
   var modeClearRecorded = false;
 
   var indicatorTapCount = 0;
-  var lastIndicatorTapAt = 0;
+  var indicatorTapFeedbackTimer = null;
 
   function getCell(r, c) {
     if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return null;
@@ -1280,14 +1371,17 @@ h1 {
   }
 
   function countIndicatorTap() {
-    var now = Date.now();
+    indicatorTapCount += 1;
 
-    if (now - lastIndicatorTapAt > 2000) {
-      indicatorTapCount = 0;
+    stepIndicatorEl.classList.add('tapped');
+    if (indicatorTapFeedbackTimer !== null) {
+      window.clearTimeout(indicatorTapFeedbackTimer);
     }
 
-    lastIndicatorTapAt = now;
-    indicatorTapCount += 1;
+    indicatorTapFeedbackTimer = window.setTimeout(function () {
+      stepIndicatorEl.classList.remove('tapped');
+      indicatorTapFeedbackTimer = null;
+    }, 220);
 
     if (indicatorTapCount >= 5) {
       indicatorTapCount = 0;
@@ -1331,7 +1425,8 @@ h1 {
     }).catch(function (error) {
       console.warn(error);
       if (statsOverlayEl.classList.contains('show')) {
-        statsStatusEl.textContent = '集計を読み込めませんでした。少し待ってから開き直してください。';
+        statsStatusEl.textContent =
+          '集計を読み込めませんでした。少し待ってから開き直してください。';
       }
     });
   }
@@ -1401,6 +1496,7 @@ h1 {
 
     stepIndicatorEl.textContent = currentMode + '/2';
     stepIndicatorEl.setAttribute('aria-label', 'ステップ ' + currentMode + ' / 2');
+    indicatorTapCount = 0;
   }
 
   function getShareText() {
@@ -1505,7 +1601,6 @@ h1 {
     var mv = moveMap(state)[kind];
     if (!mv) return;
 
-    // STEP 1の最初の扉だけを、ゲームの「プレイ回数」に数える。
     if (currentMode === 1 && !playRecorded) {
       playRecorded = true;
       recordGameEvent(1, 'play');
@@ -1559,7 +1654,6 @@ h1 {
   }
 
   function resetGame() {
-    // 同じ挑戦での再スタートなので、playRecordedは変更しない。
     performResetAnimation();
   }
 
