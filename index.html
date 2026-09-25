@@ -97,8 +97,8 @@ h1 {
   flex: 1;
   width: 100%;
   overflow: hidden;
-  background: 
-    linear-gradient(180deg, 
+  background:
+    linear-gradient(180deg,
       #fefefe 0%,
       #fbfbf9 25%,
       #f8f8f6 50%,
@@ -125,6 +125,31 @@ h1 {
   pointer-events: none;
   z-index: 101;
   display: none;
+}
+
+.step-indicator {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  z-index: 110;
+  appearance: none;
+  margin: 0;
+  padding: 5px 10px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.75);
+  color: rgba(0, 0, 0, 0.45);
+  font-family: "Noto Sans JP", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  cursor: default;
+  touch-action: manipulation;
+}
+
+.step-indicator:focus-visible {
+  outline: 1px solid rgba(100, 100, 100, 0.5);
+  outline-offset: 2px;
 }
 
 .room {
@@ -172,7 +197,7 @@ h1 {
   width: 100%;
   height: 32%;
   z-index: 6;
-  background: linear-gradient(180deg, 
+  background: linear-gradient(180deg,
     rgba(220, 220, 213, 1) 0%,
     rgba(210, 210, 200, 1) 25%,
     rgba(200, 200, 190, 1) 50%,
@@ -194,7 +219,7 @@ h1 {
   height: 30%;
   z-index: 12;
   position: relative;
-  background: linear-gradient(180deg, 
+  background: linear-gradient(180deg,
     rgba(220, 220, 213, 1) 0%,
     rgba(210, 210, 200, 1) 25%,
     rgba(200, 200, 190, 1) 50%,
@@ -225,13 +250,13 @@ h1 {
   height: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
-  background: linear-gradient(180deg, 
+  background: linear-gradient(180deg,
     #f0f0ed 0%,
     #ebebea 50%,
     #e5e5e1 100%
   );
   border: 1px solid rgba(140, 140, 140, 0.12);
-  box-shadow: 
+  box-shadow:
     inset 0 2px 4px rgba(255, 255, 255, 0.2),
     inset 0 -2px 4px rgba(140, 140, 140, 0.08),
     0 2px 6px rgba(120, 120, 120, 0.08);
@@ -288,14 +313,14 @@ h1 {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: linear-gradient(180deg, 
+  background: linear-gradient(180deg,
     #f5f5f3 0%,
     #ececea 30%,
     #e0e0db 70%,
     #d5d5ce 100%
   );
   border: 1.5px solid rgba(120, 120, 120, 0.18);
-  box-shadow: 
+  box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.6),
     inset 0 -8px 12px rgba(100, 100, 100, 0.12),
     0 4px 12px rgba(100, 100, 100, 0.1);
@@ -329,7 +354,7 @@ h1 {
   top: 2.5%;
   bottom: 2.5%;
   width: 49%;
-  background: linear-gradient(180deg, 
+  background: linear-gradient(180deg,
     #fefefe 0%,
     #fcfcfb 40%,
     #f9f9f7 70%,
@@ -429,7 +454,7 @@ h1 {
   height: 32%;
   z-index: 5;
   pointer-events: none;
-  background: linear-gradient(180deg, 
+  background: linear-gradient(180deg,
     rgba(220, 220, 213, 1) 0%,
     rgba(210, 210, 200, 1) 25%,
     rgba(200, 200, 190, 1) 50%,
@@ -479,6 +504,7 @@ h1 {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  min-height: 48px;
 }
 
 .message {
@@ -578,7 +604,7 @@ h1 {
   text-align: center;
   background: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(160, 160, 160, 0.15);
-  box-shadow: 
+  box-shadow:
     0 8px 32px rgba(150, 150, 150, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
@@ -714,58 +740,68 @@ h1 {
   text-align: center;
   background: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(160, 160, 160, 0.15);
-  box-shadow: 
-    0 8px 32px rgba(150, 150, 150, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 32px rgba(150, 150, 150, 0.08);
 }
 
-.confirm-text {
+.stats-title {
   margin: 0 0 24px;
-  font-size: 16px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+  color: rgba(40, 40, 40, 0.85);
+}
+
+.stats-status {
+  margin: 0;
+  text-align: center;
+  font-size: 14px;
   line-height: 1.8;
-  letter-spacing: 0.02em;
-  color: rgba(80, 80, 80, 0.8);
 }
 
-.confirm-buttons {
+.stats-data[hidden],
+.stats-status[hidden] {
+  display: none !important;
+}
+
+.stats-row {
   display: flex;
-  gap: 12px;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(100, 100, 100, 0.1);
+  font-size: 14px;
 }
 
-.confirm-btn {
-  appearance: none;
-  padding: 10px 24px;
-  border: 1px solid rgba(140, 140, 140, 0.25);
-  background: rgba(255, 255, 255, 0.5);
-  color: rgba(60, 60, 60, 0.7);
+.stats-row strong {
+  font-size: 18px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.stats-note {
+  margin: 18px 0 0;
+  font-size: 11px;
+  line-height: 1.7;
+  color: rgba(80, 80, 80, 0.6);
+}
+
+.stats-close-btn {
+  display: block;
+  margin: 26px auto 0;
+  padding: 8px 24px;
+  border: 1px solid rgba(140, 140, 140, 0.3);
+  border-radius: 4px;
+  background: #ffffff;
+  color: rgba(60, 60, 60, 0.8);
   font-family: "Noto Sans JP", sans-serif;
   font-size: 14px;
-  letter-spacing: 0.02em;
   cursor: pointer;
-  pointer-events: auto;
-  touch-action: manipulation;
-  transition: background 180ms ease, color 180ms ease;
-  border-radius: 4px;
 }
 
-.confirm-btn:hover {
-  background: rgba(255, 255, 255, 0.7);
-  color: rgba(40, 40, 40, 0.8);
-}
-
-.confirm-btn:focus-visible {
-  outline: 1px solid rgba(100, 100, 100, 0.3);
-  outline-offset: 3px;
-}
-
-.confirm-btn-yes {
-  background: rgba(100, 150, 200, 0.2);
-  border-color: rgba(100, 150, 200, 0.4);
-}
-
-.confirm-btn-yes:hover {
-  background: rgba(100, 150, 200, 0.3);
+.stats-close-btn:focus-visible {
+  outline: 1px solid rgba(100, 100, 100, 0.5);
+  outline-offset: 2px;
 }
 
 @media (max-width: 768px) {
@@ -786,6 +822,12 @@ h1 {
 
   .stage-frame {
     display: block;
+  }
+
+  .step-indicator {
+    top: 14px;
+    right: 14px;
+    font-size: 13px;
   }
 
   .door-front {
@@ -853,7 +895,7 @@ h1 {
 
 <div class="wrap">
   <p class="instruction" id="instruction">この部屋から最短で<br>その部屋へ向かってください。</p>
-  
+
   <div class="stage" id="stage" aria-live="polite">
     <div class="stage-container" id="stageContainer">
       <div class="room" id="room">
@@ -901,6 +943,7 @@ h1 {
         <div class="ceiling-overlay"></div>
       </div>
       <div class="stage-frame" id="stageFrame"></div>
+      <button class="step-indicator" id="stepIndicator" type="button" aria-label="ステップ 1 / 2">1/2</button>
     </div>
   </div>
 
@@ -937,6 +980,40 @@ h1 {
   </div>
 </div>
 
+<div class="stats-overlay" id="statsOverlay" role="dialog" aria-modal="true" aria-labelledby="statsTitle" aria-hidden="true">
+  <div class="stats-inner">
+    <h2 class="stats-title" id="statsTitle">プレイ記録</h2>
+
+    <p class="stats-status" id="statsStatus">読み込み中…</p>
+
+    <div class="stats-data" id="statsData" hidden>
+      <div class="stats-row">
+        <span>プレイ回数</span>
+        <strong id="statsTotalPlays">0</strong>
+      </div>
+
+      <div class="stats-row">
+        <span>STEP 1 クリア数</span>
+        <strong id="statsStep1Clears">0</strong>
+      </div>
+
+      <div class="stats-row">
+        <span>STEP 2 クリア数</span>
+        <strong id="statsStep2Clears">0</strong>
+      </div>
+
+      <div class="stats-row">
+        <span>クリア率</span>
+        <strong id="statsClearRate">0%</strong>
+      </div>
+
+      <p class="stats-note">クリア率＝STEP 2クリア数 ÷ プレイ回数。全体の目安です。</p>
+    </div>
+
+    <button class="stats-close-btn" id="statsCloseBtn" type="button">閉じる</button>
+  </div>
+</div>
+
 <script>
 (function () {
   'use strict';
@@ -951,7 +1028,9 @@ h1 {
 
   var ROWS = GRID.length;
   var COLS = GRID[0].length;
-  var STORAGE_KEY = 'asoko_state_v7_0';
+  var STORAGE_KEY = 'asoko_mode_v1';
+  var SUPABASE_URL = 'https://pxliunzyzeoozwlwjsxp.supabase.co';
+  var SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_SaPVGogcN8YDfXn8qj1fuQ_5svwlNiq';
   var BUILD_LABEL = 'build v7.0';
   var DEBUG_LABELS = false;
   var HIRAGANA_VISIBLE = false;
@@ -981,6 +1060,13 @@ h1 {
   var moving = false;
   var currentMode = 1;
 
+  // STEP 1で最初の扉を押したか。部屋に戻っても変更しない。
+  var playRecorded = false;
+  var modeClearRecorded = false;
+
+  var indicatorTapCount = 0;
+  var lastIndicatorTapAt = 0;
+
   function getCell(r, c) {
     if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return null;
     return GRID[r][c];
@@ -1001,34 +1087,18 @@ h1 {
     };
   }
 
-  function normalizeState(raw) {
-    if (!raw) return freshState();
-    if (
-      typeof raw.row !== 'number' ||
-      typeof raw.col !== 'number' ||
-      typeof raw.facing !== 'number' ||
-      !isRoom(raw.row, raw.col)
-    ) return freshState();
-    return {
-      row: raw.row,
-      col: raw.col,
-      facing: ((raw.facing % 4) + 4) % 4,
-      moveCount: typeof raw.moveCount === 'number' ? raw.moveCount : 0,
-      visitedVia: !!raw.visitedVia,
-      goalMessage: null
-    };
-  }
-
-  function loadState() {
+  function loadMode() {
     try {
-      return normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY)));
+      return localStorage.getItem(STORAGE_KEY) === '2' ? 2 : 1;
     } catch (e) {
-      return freshState();
+      return 1;
     }
   }
 
-  function saveState() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { }
+  function saveMode() {
+    try {
+      localStorage.setItem(STORAGE_KEY, String(currentMode));
+    } catch (e) { }
   }
 
   function roomName(st) {
@@ -1147,9 +1217,7 @@ h1 {
   }
 
   var instructionEl = document.getElementById('instruction');
-  var stageEl = document.getElementById('stage');
-  var stageContainerEl = document.getElementById('stageContainer');
-  var roomEl = document.getElementById('room');
+  var stepIndicatorEl = document.getElementById('stepIndicator');
   var roomBoxEl = document.getElementById('roomBox');
   var roomDebugEl = document.getElementById('roomDebug');
   var hiraganaLayerEl = document.getElementById('hiraganaLayer');
@@ -1173,6 +1241,106 @@ h1 {
   var confirmNoBtn = document.getElementById('confirmNoBtn');
   var doorEls = { front: doorFrontEl, left: doorLeftEl, right: doorRightEl };
 
+  var statsOverlayEl = document.getElementById('statsOverlay');
+  var statsStatusEl = document.getElementById('statsStatus');
+  var statsDataEl = document.getElementById('statsData');
+  var statsTotalPlaysEl = document.getElementById('statsTotalPlays');
+  var statsStep1ClearsEl = document.getElementById('statsStep1Clears');
+  var statsStep2ClearsEl = document.getElementById('statsStep2Clears');
+  var statsClearRateEl = document.getElementById('statsClearRate');
+  var statsCloseBtn = document.getElementById('statsCloseBtn');
+
+  function sendStatsRequest(functionName, parameters) {
+    return fetch(SUPABASE_URL + '/rest/v1/rpc/' + functionName, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_PUBLISHABLE_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(parameters)
+    }).then(function (response) {
+      if (!response.ok) {
+        return response.text().then(function (detail) {
+          throw new Error('集計への接続に失敗しました (' + response.status + '): ' + detail);
+        });
+      }
+      return response.text().then(function (text) {
+        return text ? JSON.parse(text) : null;
+      });
+    });
+  }
+
+  function recordGameEvent(step, eventName) {
+    sendStatsRequest('asoko_record_event', {
+      p_step: step,
+      p_event: eventName
+    }).catch(function (error) {
+      console.warn(error);
+    });
+  }
+
+  function countIndicatorTap() {
+    var now = Date.now();
+
+    if (now - lastIndicatorTapAt > 2000) {
+      indicatorTapCount = 0;
+    }
+
+    lastIndicatorTapAt = now;
+    indicatorTapCount += 1;
+
+    if (indicatorTapCount >= 5) {
+      indicatorTapCount = 0;
+      showStats();
+    }
+  }
+
+  function formatCount(value) {
+    var number = Number(value);
+    return Number.isFinite(number) && number >= 0
+      ? number.toLocaleString('ja-JP')
+      : '0';
+  }
+
+  function showStats() {
+    statsOverlayEl.classList.add('show');
+    statsOverlayEl.setAttribute('aria-hidden', 'false');
+    statsStatusEl.textContent = '読み込み中…';
+    statsStatusEl.hidden = false;
+    statsDataEl.hidden = true;
+
+    sendStatsRequest('asoko_get_stats', {}).then(function (data) {
+      if (!statsOverlayEl.classList.contains('show')) return;
+
+      if (!data) throw new Error('集計データが見つかりません');
+
+      var plays = Number(data.step1_plays) || 0;
+      var step1Clears = Number(data.step1_clears) || 0;
+      var step2Clears = Number(data.step2_clears) || 0;
+      var clearRate = plays > 0
+        ? (step2Clears / plays * 100).toFixed(1) + '%'
+        : '0%';
+
+      statsTotalPlaysEl.textContent = formatCount(plays);
+      statsStep1ClearsEl.textContent = formatCount(step1Clears);
+      statsStep2ClearsEl.textContent = formatCount(step2Clears);
+      statsClearRateEl.textContent = clearRate;
+
+      statsStatusEl.hidden = true;
+      statsDataEl.hidden = false;
+    }).catch(function (error) {
+      console.warn(error);
+      if (statsOverlayEl.classList.contains('show')) {
+        statsStatusEl.textContent = '集計を読み込めませんでした。少し待ってから開き直してください。';
+      }
+    });
+  }
+
+  function hideStats() {
+    statsOverlayEl.classList.remove('show');
+    statsOverlayEl.setAttribute('aria-hidden', 'true');
+  }
+
   function clearDoorAnimation() {
     doorFrontEl.classList.remove('opening');
     doorLeftEl.classList.remove('opening');
@@ -1194,19 +1362,22 @@ h1 {
 
   function render() {
     var currentRoom = roomName(state) || '';
+
     if (roomDebugEl) {
       roomDebugEl.textContent = DEBUG_LABELS ? currentRoom : '';
       roomDebugEl.hidden = !DEBUG_LABELS;
     }
+
     if (hiraganaLayerEl) {
       hiraganaLayerEl.textContent = currentRoom;
     }
+
     var doors = moveMap(state);
 
     doorFrontEl.hidden = !doors.front;
     doorLeftEl.hidden = !doors.left;
     doorRightEl.hidden = !doors.right;
-    
+
     doorHitLeftEl.style.display = !doors.left ? 'none' : 'block';
     doorHitRightEl.style.display = !doors.right ? 'none' : 'block';
 
@@ -1227,6 +1398,9 @@ h1 {
     } else {
       resetFromStage2Btn.classList.remove('show');
     }
+
+    stepIndicatorEl.textContent = currentMode + '/2';
+    stepIndicatorEl.setAttribute('aria-label', 'ステップ ' + currentMode + ' / 2');
   }
 
   function getShareText() {
@@ -1240,7 +1414,9 @@ h1 {
   function share() {
     var text = getShareText();
     var url = 'https://boku0210.github.io/asoko/';
-    var twitterUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url);
+    var twitterUrl = 'https://twitter.com/intent/tweet?text='
+      + encodeURIComponent(text)
+      + '&url=' + encodeURIComponent(url);
     window.open(twitterUrl, '_blank', 'width=550,height=420');
   }
 
@@ -1270,12 +1446,19 @@ h1 {
     return false;
   }
 
+  function recordClearOnce() {
+    if (modeClearRecorded) return;
+    modeClearRecorded = true;
+    recordGameEvent(currentMode, 'clear');
+  }
+
   function checkGoal() {
     if (state.row === GOAL.row && state.col === GOAL.col) {
       if (currentMode === 1) {
         if (state.moveCount !== 1) {
           showGoalMessage('最短経路ではありません');
         } else {
+          recordClearOnce();
           clearStepEl.textContent = 'STEP 1 CLEAR';
           clearTextEl.textContent = 'あなたは「そこの部屋」を巡った。';
           againBtn.textContent = '次へ';
@@ -1288,6 +1471,7 @@ h1 {
         } else if (state.moveCount !== SHORTEST) {
           showGoalMessage('最短経路ではありません');
         } else {
+          recordClearOnce();
           clearStepEl.textContent = 'ALL CLEAR';
           clearTextEl.textContent = 'あなたは「あそこの部屋」を巡った。';
           againBtn.textContent = 'もう一度あそぶ';
@@ -1303,34 +1487,43 @@ h1 {
     state.col = mv.col;
     state.facing = mv.dir;
     state.moveCount += 1;
-    if (state.row === VIA.row && state.col === VIA.col) state.visitedVia = true;
-    
+
+    if (state.row === VIA.row && state.col === VIA.col) {
+      state.visitedVia = true;
+    }
+
     if (!checkDeadEnd()) {
       checkGoal();
     }
-    
-    saveState();
+
     render();
   }
 
   function pressDoor(kind) {
     if (moving) return;
+
     var mv = moveMap(state)[kind];
     if (!mv) return;
 
+    // STEP 1の最初の扉だけを、ゲームの「プレイ回数」に数える。
+    if (currentMode === 1 && !playRecorded) {
+      playRecorded = true;
+      recordGameEvent(1, 'play');
+    }
+
     moving = true;
     hideGoalMessage();
-    
+
     clearDoorAnimation();
     var door = doorEls[kind];
     if (door) door.classList.add('opening');
 
     window.setTimeout(function () {
       roomBoxEl.style.filter = 'blur(3px) brightness(0.9)';
-      
+
       window.setTimeout(function () {
         applyMove(mv);
-        
+
         window.setTimeout(function () {
           roomBoxEl.style.filter = 'blur(0) brightness(1)';
           clearDoorAnimation();
@@ -1351,14 +1544,13 @@ h1 {
     hideGoalMessage();
 
     roomBoxEl.style.filter = 'blur(3px) brightness(0.9)';
-    
+
     window.setTimeout(function () {
       state = freshState();
       hideClear();
       updateUIForMode();
-      saveState();
       render();
-      
+
       window.setTimeout(function () {
         roomBoxEl.style.filter = 'blur(0) brightness(1)';
         moving = false;
@@ -1367,24 +1559,43 @@ h1 {
   }
 
   function resetGame() {
+    // 同じ挑戦での再スタートなので、playRecordedは変更しない。
     performResetAnimation();
   }
 
   function nextMode() {
+    if (moving) return;
+
     if (currentMode === 1) {
       currentMode = 2;
-      instructionEl.innerHTML = 'この部屋から最短であの部屋を経由して<br>その部屋へ向かってください。';
-      performResetAnimation();
+      instructionEl.innerHTML =
+        'この部屋から最短であの部屋を経由して<br>その部屋へ向かってください。';
     } else {
       currentMode = 1;
-      instructionEl.innerHTML = 'この部屋から最短で<br>その部屋へ向かってください。';
-      performResetAnimation();
+      instructionEl.innerHTML =
+        'この部屋から最短で<br>その部屋へ向かってください。';
     }
+
+    playRecorded = false;
+    modeClearRecorded = false;
+
+    saveMode();
+    updateUIForMode();
+    performResetAnimation();
   }
 
   function resetToStage1() {
+    if (moving) return;
+
     currentMode = 1;
-    instructionEl.innerHTML = 'この部屋から最短で<br>その部屋へ向かってください。';
+    instructionEl.innerHTML =
+      'この部屋から最短で<br>その部屋へ向かってください。';
+
+    playRecorded = false;
+    modeClearRecorded = false;
+
+    saveMode();
+    updateUIForMode();
     performResetAnimation();
   }
 
@@ -1401,19 +1612,42 @@ h1 {
   doorRightEl.addEventListener('click', function () { pressDoorWithoutFloorCheck('right'); });
   doorHitLeftEl.addEventListener('click', function () { pressDoorWithoutFloorCheck('left'); });
   doorHitRightEl.addEventListener('click', function () { pressDoorWithoutFloorCheck('right'); });
+
   resetBtn.addEventListener('click', resetGame);
   againBtn.addEventListener('click', nextMode);
   shareBtn.addEventListener('click', share);
+
   resetFromStage2Btn.addEventListener('click', showConfirm);
-  confirmYesBtn.addEventListener('click', function() {
+  confirmYesBtn.addEventListener('click', function () {
     hideConfirm();
     resetToStage1();
   });
   confirmNoBtn.addEventListener('click', hideConfirm);
 
+  stepIndicatorEl.addEventListener('click', countIndicatorTap);
+  statsCloseBtn.addEventListener('click', hideStats);
+
+  statsOverlayEl.addEventListener('click', function (event) {
+    if (event.target === statsOverlayEl) hideStats();
+  });
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && statsOverlayEl.classList.contains('show')) {
+      hideStats();
+    }
+  });
+
   SHORTEST = shortestTotal();
+  currentMode = loadMode();
   state = freshState();
+
+  if (currentMode === 2) {
+    instructionEl.innerHTML =
+      'この部屋から最短であの部屋を経由して<br>その部屋へ向かってください。';
+  }
+
   updateHiraganaVisibility();
+  updateUIForMode();
   render();
 })();
 </script>
